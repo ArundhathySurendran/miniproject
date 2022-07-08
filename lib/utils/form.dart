@@ -47,7 +47,7 @@ class FormUtils {
         transaction.date = DateFormat.yMMMd().add_jms().format(DateTime.now());
         if (transaction.type == 1) item.lastStockEntry = transaction.date;
         transaction.signature = userData.email;
-        batch.setData(db.collection('$targetEmail-transactions').document(),
+        batch.set(db.collection('$targetEmail-transactions').doc(),
             transaction.toMap());
       } else {
         // Update operation
@@ -56,10 +56,10 @@ class FormUtils {
           return "Permission Denied: You don't have editing access";
         } else {
           transaction.signature = userData.email;
-          batch.updateData(
+          batch.update(
               db
                   .collection('$targetEmail-transactions')
-                  .document(transaction.id),
+                  .doc(transaction.id),
               transaction.toMap());
         }
       }
@@ -71,7 +71,7 @@ class FormUtils {
         // updates the transactins items is not changed and only transaction change with the sign of them
         // Later when owner accepts it (by just resaving) this condition is passed and item is changed
         print("db owner so updating item $item");
-        batch.updateData(db.collection('$targetEmail-items').document(item.id),
+        batch.update(db.collection('$targetEmail-items').doc(item.id),
             item.toMap());
       }
 
@@ -106,7 +106,7 @@ class FormUtils {
       // draft and item associated to them should not change until owner verfies/owns it.
 
       batch.delete(
-          db.collection('$targetEmail-transactions').document(transaction.id));
+          db.collection('$targetEmail-transactions').doc(transaction.id));
       batch.commit();
       callback(message);
       return;
@@ -121,9 +121,9 @@ class FormUtils {
     }
     try {
       batch.delete(
-          db.collection('$targetEmail-transactions').document(transaction.id));
-      batch.updateData(
-          db.collection('$targetEmail-items').document(item.id), item.toMap());
+          db.collection('$targetEmail-transactions').doc(transaction.id));
+      batch.update(
+          db.collection('$targetEmail-items').doc(item.id), item.toMap());
 
       batch.commit();
     } catch (e) {

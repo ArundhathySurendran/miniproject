@@ -33,8 +33,8 @@ class CrudHelper {
     if (targetEmail == this.userData.email) {
       await FirebaseFirestore.instance
           .collection('$targetEmail-items')
-          .document(newItem.id)
-          .updateData(newItem.toMap())
+          .doc(newItem.id)
+          .update(newItem.toMap())
           .catchError((e) {
         print(e);
         return 0;
@@ -50,7 +50,7 @@ class CrudHelper {
     if (targetEmail == this.userData.email) {
       await FirebaseFirestore.instance
           .collection('$targetEmail-items')
-          .document(itemId)
+          .doc(itemId)
           .delete()
           .catchError((e) {
         print(e);
@@ -77,19 +77,19 @@ class CrudHelper {
     QuerySnapshot itemSnapshots = await FirebaseFirestore.instance
         .collection('$email-items')
         .where(field, isEqualTo: value)
-        .getDocuments()
+        .get()
         .catchError((e) {
       return null;
     });
 
-    if (itemSnapshots.documents.isEmpty) {
+    if (itemSnapshots.docs.isEmpty) {
       return null;
     }
-    DocumentSnapshot itemSnapshot = itemSnapshots.documents.first;
+    DocumentSnapshot itemSnapshot = itemSnapshots.docs.first;
 
-    if (itemSnapshot.data.isNotEmpty) {
-      Item item = Item.fromMapObject(itemSnapshot.data);
-      item.id = itemSnapshot.documentID;
+    if (itemSnapshot.data() != null) {
+      Item item = Item.fromMapObject(itemSnapshot.data());
+      item.id = itemSnapshot.id;
       return item;
     } else {
       return null;
@@ -99,14 +99,14 @@ class CrudHelper {
   Future<Item> getItemById(String id) async {
     String email = this.userData.targetEmail;
     DocumentSnapshot itemSnapshot = await FirebaseFirestore.instance
-        .document('$email-items/$id')
+        .doc('$email-items/$id')
         .get()
         .catchError((e) {
       return null;
     });
-    if (itemSnapshot.data?.isNotEmpty ?? false) {
-      Item item = Item.fromMapObject(itemSnapshot.data);
-      item.id = itemSnapshot.documentID;
+    if (itemSnapshot.data()==null) {
+      Item item = Item.fromMapObject(itemSnapshot.data());
+      item.id = itemSnapshot.id;
       return item;
     } else {
       return null;
@@ -118,11 +118,11 @@ class CrudHelper {
     QuerySnapshot snapshots = await FirebaseFirestore.instance
         .collection('$email-items')
         .orderBy('used', descending: true)
-        .getDocuments();
+        .get();
     List<Item> items = List<Item>();
-    snapshots.documents.forEach((DocumentSnapshot snapshot) {
-      Item item = Item.fromMapObject(snapshot.data);
-      item.id = snapshot.documentID;
+    snapshots.docs.forEach((DocumentSnapshot snapshot) {
+      Item item = Item.fromMapObject(snapshot.data());
+      item.id = snapshot.id;
       items.add(item);
     });
     return items;
@@ -143,7 +143,7 @@ class CrudHelper {
     QuerySnapshot snapshots = await FirebaseFirestore.instance
         .collection('$email-transactions')
         .where('signature', isEqualTo: email)
-        .getDocuments();
+        .get();
     return ItemTransaction.fromQuerySnapshot(snapshots);
   }
 
@@ -156,7 +156,7 @@ class CrudHelper {
     QuerySnapshot snapshots = await FirebaseFirestore.instance
         .collection('$email-transactions')
         .where('signature', whereIn: roles)
-        .getDocuments();
+        .get();
     return ItemTransaction.fromQuerySnapshot(snapshots);
   }
 
@@ -165,7 +165,7 @@ class CrudHelper {
     QuerySnapshot snapshots = await FirebaseFirestore.instance
         .collection('$email-transactions')
         .where('due_amount', isGreaterThan: 0.0)
-        .getDocuments();
+        .get();
     return ItemTransaction.fromQuerySnapshot(snapshots);
   }
 
@@ -174,17 +174,17 @@ class CrudHelper {
     QuerySnapshot userDataSnapshots = await FirebaseFirestore.instance
         .collection('users')
         .where(field, isEqualTo: value)
-        .getDocuments()
+        .get()
         .catchError((e) {
       return null;
     });
-    if (userDataSnapshots.documents.isEmpty) {
+    if (userDataSnapshots.docs.isEmpty) {
       return null;
     }
-    DocumentSnapshot userDataSnapshot = userDataSnapshots.documents.first;
-    if (userDataSnapshot.data.isNotEmpty) {
-      UserData userData = UserData.fromMapObject(userDataSnapshot.data);
-      userData.uid = userDataSnapshot.documentID;
+    DocumentSnapshot userDataSnapshot = userDataSnapshots.docs.first;
+    if (userDataSnapshot.data() != null) {
+      UserData userData = UserData.fromMapObject(userDataSnapshot.data());
+      userData.uid = userDataSnapshot.id;
       return userData;
     } else {
       return null;
@@ -203,7 +203,7 @@ class CrudHelper {
       return null;
     }
 
-    UserData userData = UserData.fromMapObject(_userData.data);
+    UserData userData = UserData.fromMapObject(_userData.data());
     print("here we go $userData & roles ${userData.roles}");
     return userData;
   }
@@ -212,8 +212,8 @@ class CrudHelper {
     print("got userData and roles ${userData.toMap}");
     await FirebaseFirestore.instance
         .collection('users')
-        .document(userData.uid)
-        .setData(userData.toMap())
+        .doc(userData.uid)
+        .set(userData.toMap())
         .catchError((e) {
       print(e);
       return 0;

@@ -40,7 +40,7 @@ class AuthService {
       return null;
     }
   }
-
+  
   // register with email and password
   Future register(String email, String password) async {
     try {
