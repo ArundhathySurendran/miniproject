@@ -29,46 +29,46 @@ class AuthService {
   }
 
   // sign in with email and password
-  Future signInWithEmailAndPassword(String email, String password) async {
-    try {
-      AuthResult result = await _firebaseAuth.signInWithEmailAndPassword(
-          email: email, password: password);
-      FirebaseUser user = result.user;
-      return user;
-    } catch (error) {
-      print(error.toString());
-      return null;
-    }
-  }
+  // Future signInWithEmailAndPassword(String email, String password) async {
+  //   try {
+  //     AuthResult result = await _firebaseAuth.signInWithCredential(
+  //         email: email, password: password);
+  //     FirebaseUser user = result.user;
+  //     return user;
+  //   } catch (error) {
+  //     print(error.toString());
+  //     return null;
+  //   }
+  // }
   
   // register with email and password
-  Future register(String email, String password) async {
-    try {
-      AuthResult result = await _firebaseAuth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      FirebaseUser user = result.user;
-      // create a new document for the user with the uid
-      UserData duplicate =
-          await CrudHelper().getUserData('email', user.email);
-      if (duplicate != null) {
-        print("duplicate email");
-        return null;
-      }
+  // Future register(String email, String password) async {
+  //   try {
+  //     AuthResult result = await _firebaseAuth.createUserWithEmailAndPassword(
+  //         email: email, password: password);
+  //     FirebaseUser user = result.user;
+  //     // create a new document for the user with the uid
+  //     UserData duplicate =
+  //         await CrudHelper().getUserData('email', user.email);
+  //     if (duplicate != null) {
+  //       print("duplicate email");
+  //       return null;
+  //     }
 
-      UserData userData = UserData(
-          uid: user.uid,
-          targetEmail: user.email,
-          email: user.email,
-          verified: user.isEmailVerified,
-          roles: Map());
+  //     UserData userData = UserData(
+  //         uid: user.uid,
+  //         targetEmail: user.email,
+  //         email: user.email,
+  //         verified: user.isEmailVerified,
+  //         roles: Map());
 
-      await CrudHelper().updateUserData(userData);
-      return user;
-    } catch (error) {
-      print(error.toString());
-      return null;
-    }
-  }
+  //     await CrudHelper().updateUserData(userData);
+  //     return user;
+  //   } catch (error) {
+  //     print(error.toString());
+  //     return null;
+  //   }
+  // }
 
   // sign out
   Future signOut() async {
