@@ -82,15 +82,15 @@ class _SignInState extends State<SignIn> {
                             setState(() => loading = true);
                             String email = this.userEmailController.text;
                             String password = this.userPasswordController.text;
-                            dynamic result = await _auth
-                                .signInWithEmailAndPassword(email, password);
-                            if (result == null) {
-                              setState(() {
-                                loading = false;
-                                error =
-                                    'Could not sign in with those credentials';
-                              });
-                            }
+                            // dynamic result = await _auth
+                            //     .signInWithEmailAndPassword(email, password);
+                            // if (result == null) {
+                            //   setState(() {
+                            //     loading = false;
+                            //     error =
+                            //         'Could not sign in with those credentials';
+                            //   });
+                            // }
                           }
                         }),
                     SizedBox(height: 12.0),

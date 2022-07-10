@@ -265,6 +265,7 @@ class ItemListState extends State<ItemList> {
       Expanded(
           child: ListView.builder(
               padding: EdgeInsets.zero,
+              
               itemCount: this.itemsList.length,
               itemBuilder: (BuildContext context, int index) {
                 Item item = this.itemsList[index];

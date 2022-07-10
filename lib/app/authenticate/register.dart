@@ -76,14 +76,14 @@ class _RegisterState extends State<Register> {
                             setState(() => loading = true);
                             String email = this.userEmailController.text;
                             String password = this.userPasswordController.text;
-                            dynamic result =
-                                await _auth.register(email, password);
-                            if (result == null) {
-                              setState(() {
-                                loading = false;
-                                error = 'Please supply a valid email';
-                              });
-                            }
+                          //  /* dynamic result =
+                          //       await _auth.register(email, password);
+                          //   if (result == null) {
+                          //     setState(() {
+                          //       loading = false;
+                          //       error = 'Please supply a valid email';
+                          //     });
+                          //   }
                           }
                         }),
                     SizedBox(height: 12.0),
